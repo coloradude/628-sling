@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bitmovin SDK - Getting Started WEB SDK</title>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- STEP 1 - SDK Installation-->
+  <script src="https://cdn.bitmovin.com/player/web/8.119.0/bitmovinplayer.js" type="text/javascript"></script>
+</head>
+<body>
+
+<!-- STEP 2 - Provide a player container element-->
+<div id="my-player"></div>
+
+<script>
+//<!-- STEP 3 - Configure and Initialize the player-->
+var playerConfig = {
+  "key": "04892301-e617-459b-908b-b0fe9392fe95",
+    "style": {
+        "width": "100%",
+        "height": "100vh",
+        "controls": false,
+        "ux": false
+    },
+    logs: {
+      level: 'debug'
+    },
+    "tweaks": {
+        "no_quota_exceeded_adjustment": true,
+        "startup_threshold": 0.9,
+        "ENABLE_SEEK_FOR_LIVE": true,
+        "GAP_TOLERANCE": 0.3,
+        "MINIMAL_BACKWARD_BUFFER_CLEARING_INTERVAL": 1
+    },
+    "buffer": {
+        "video": {
+            "forwardduration": 30,
+            "backwardduration": 10
+        },
+        "audio": {
+            "forwardduration": 30,
+            "backwardduration": 10
+        }
+    },
+    "adaptation": {
+        "desktop": {
+            "maxStartupBitrate": 9999999,
+            "rttEstimationMethod": "median"
+        },
+        "mobile": {
+            "maxStartupBitrate": 9999999,
+            "rttEstimationMethod": "median"
+        }
+    },
+}
+var container = document.getElementById('my-player');
+var player = new bitmovin.player.Player(container, playerConfig);
+
+//<!-- STEP 4 - Configure and load a Source for the player -->
+var sourceConfig = {
+    "drm": {
+        "playready": {
+            "LA_URL": "https://p-drmpr.movetv.com/playready/rightsmanager.asmx",
+            "maxLicenseRequestRetries": 3,
+            "licenseRequestRetryDelay": 20,
+            "headers": {
+                "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjM1Mzg2NjY1LTMzNjQtNjMzNy0zMjY0LTM5MzUzNTY2Mzk2NCJ9.eyJ1c2VyX2d1aWQiOiJlYmI2M2Q2NC0xM2ZiLTExZTctYjBhNS0wZWIyMTNkNTU2ZWYiLCJjaGFubmVsX2d1aWQiOiJhMGIyYzQ5YmU3ODE0ZmE0YmYxZTM4MWI3ZjEyY2U1NSIsImR5bmFfaWQiOm51bGwsInF2dCI6Imh0dHBzOi8vY2JkNDZiNzcuY2RuLmNtcy5tb3ZldHYuY29tL3BsYXllcm1ldGFkYXRhL3NsaW5nL3YxL2FwaS9lbnRpdGxlbWVudC9hc3NldC9lYTYyNjYwNWY5MWNkMjQyODc0MjM5MGY4ZGFhNDJmNi5xdnQifQ.FXiE12zv8I_K3KLamdtQeabE54oySDU2yl_0iVGp0EVHJix_l30eqDjtws6w96eI_R6cU_8DsF-mdf-jlcShZGntFs308jPCctG_mH9EMcOX5ej4CvUQgjAJ3tuPT0D2yKXsMMevp8JmmQ8eEJNgoXXC-AY8Q2fnSOhbl2n2Z-czJ6GSG_NoUMb0dStalBNC6r-ExvctPv1sJKxrOs2y2x2YaBGDGqmnGmFuMUE5Ew6sGkGJEFcYxWeV06dB4djgVa67UxqlFGIklY_GBaW1PG801K5dEMk5c5ZeVxXvvurGpxq14H9629JNj4sGu15Ed9LdEvXCtsXGkh-8mqNmew",
+                "User-Id": "ebb63d64-13fb-11e7-b0a5-0eb213d556ef",
+                "Env": "production",
+                "Channel-Id": "a0b2c49be7814fa4bf1e381b7f12ce55"
+            }
+        }
+    },
+    "hls": "https://p-dynaman.movetv.com/manifest/vod/c7fea728c97341b38e6e3e346deec484/playready/master.m3u8?account_status=active&brand=sling&device_model=Edge&device_name=browser&location_zip=80909&os_name=Windows&os_version=10&qvt=https%3A//cbd46b77.cdn.cms.movetv.com/playermetadata/sling/v1/api/entitlement/asset/ea626605f91cd2428742390f8daa42f6.qvt&subscriber_id=ebb63d64-13fb-11e7-b0a5-0eb213d556ef&support_mode=false&supports_slot_template=sltp&client_session_id=e9189f38-b37e-4e56-b682-97b8fd230e0b&dma=752&start_time=1970-01-01T00:01:54.000Z",
+    "options": {
+        "startOffset": 114,
+        "startOffsetTimelineReference": "start"
+    }
+}
+
+player.load(sourceConfig).then(function() {
+    console.log('Successfully loaded Source Config!');
+  }).catch(function(reason) {
+    console.log('Error while loading source:', reason);
+  }
+);
+
+</script>
+</body>
+</html>
